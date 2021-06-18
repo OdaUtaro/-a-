@@ -1,15 +1,44 @@
 １. 線形回帰モデル
 ・要点：
+① 線形回帰モデル＝回帰問題を解くための機械学習モデル/教師あり学習
+② モデル式　目的変数＝切片＋回帰係数x説明変数（次元数分）+誤差
+③ パラメータ＝最小二乗法(学習データの平均二乗誤差を最小化）
+④ 汎化性能測定＝データを学習データと検証データに分割し、学習データを使ってモデル作成後、検証データで性能評価
 ・実装演習結果：
+from sklearn.datasets import load_boston
+from sklearn.model_selection import train_test_split
+from sklearn import linear_model
+import pandas as pd
+import numpy as np
+boston = load_boston()
+y = boston.target
+df = pd.DataFrame(boston.data, columns=boston.feature_names)
+df['PRICE'] = y
+crime_rm = df.loc[:, ['CRIM', 'RM']]
+x = crime_rm
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2)
+model = linear_model.LinearRegression()
+model.fit(x_train, y_train)
+print(model.predict(np.array([[0.3, 4]])))
+
+結果　[3.53965207]
 ・演習問題：
 
 2. 非線形回帰モデル
 ・要点：
+① 非線形回帰モデル(NonLinear Regression)＝線形で捉えることができない問題の解決方法
+② 学習方法＝基底展開法（基底関数（多項式関数、ガウス型基底関数、スプライン関数など）＋パラメータベクトルの線形結合）
+③ パラメータ＝最小二乗法/最尤法
+④ 注意点＝未学習/過学習 ⇒　正則化によって改善
+⑤ 正則化＝L2ノルム、L1ノルム
+⑥ ホールドアウト法＝１回に学習するデータを絞り、学習回数を増やす
+⑦ 交差検証＝データを学習用と評価用にn分割して、分割したモデルを評価して、精度の平均を取り最も良いモデルを採用
 ・実装演習結果：
 ・演習問題：
 
 3.　ロジスティック回帰モデル
 ・要点：
+① ロジスティック回帰モデル＝教師あり学習のクラス分類モデル
 ・実装演習結果：
 ・演習問題：
 
