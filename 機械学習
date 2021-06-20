@@ -39,20 +39,87 @@ print(model.predict(np.array([[0.3, 4]])))
 3.　ロジスティック回帰モデル
 ・要点：
 ① ロジスティック回帰モデル＝教師あり学習のクラス分類モデル
+② シグモイド関数＝求めたい事象が起こる確率を出力
+③ 数式　求めたい事象の確率＝シグモイド関数（切片＋回帰係数x説明変数）
+④ 利用する確率分布＝ベルヌーイ分布（事象Ａの確率がpの場合、事象Ｂの確率は1-p)
+⑤ 最尤推定＝尤度関数を最大化するようなパラメータを選ぶ推定方法
+⑥ パラメータ更新方法＝勾配降下法、確率勾配降下法
+⑦ 性能分析＝正解率、再現率、適合率、F値
 ・実装演習結果：
+from sklearn.datasets import load_boston
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+import pandas as pd
+import numpy as np
+df = pd.read_csv('train.csv')
+df_test = pd.read_csv('test.csv')
+df = df.fillna(df.mean())
+df_sex = pd.get_dummies(df['Sex'])
+df_sex_age = df_sex.drop('female', axis = 1)
+df_sex_age['Age'] = df['Age']
+df_sex_age['Survived'] = df['Survived'] 
+x = df_sex_age[['Age', 'male']]
+y = df_sex_age['Survived']
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 0)
+lr = LogisticRegression()
+lr.fit(x_train, y_train)
+def survived(age, sex):
+    if sex == 'male':
+        sex = 0
+    elif sex == 'female':
+        sex = 1
+    else:
+        sex = nan
+    if lr.predict(np.array([[age, sex]])) == 1:
+        print('Alive')
+    else:
+        print('Dead')
+survived(30, 'male')
+
+結果　Alive
 ・演習問題：
 
 4. 主成分分析
 ・要点：
+① 主成分分析＝多変量データの持つ構造を圧縮（データをベクトルに変形）
+② 数式　線形変換後のベクトル＝データ行列x係数ベクトル（係数ベクトルを変えることで線形変換後のベクトルに変化をつけることができる）
+③ 係数ベクトルの求め方＝ラグランジュ関数を最大化
+④ ラグランジュ関数＝目的変数-ラグランジュ乗数x制約条件
+⑤ 寄与率＝全情報量の内、該当する主成分が占める情報量の割合
 ・実装演習結果：
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
+import pandas as pd
+import numpy as np
+cancer = load_breast_cancer()
+df = pd.DataFrame(cancer.data, columns=cancer.feature_names)
+dfs = df.iloc[:, 1:].apply(lambda x: (x-x.mean())/x.std(), axis=0)
+pca = PCA()
+pca.fit(dfs)
+feature = pca.transform(dfs)
+pd.DataFrame(feature, columns=["PC{}".format(x + 1) for x in range(len(dfs.columns))]).head()
+pd.DataFrame(pca.explained_variance_ratio_, index=["PC{}".format(x + 1) for x in range(len(dfs.columns))])
 ・演習問題：
+
 
 5. アルゴリズム
 ・要点：
+① k近傍法
+＝分類問題のための機械学習手法
+説明変数の近傍のデータをk個取って、その中で一番多く所属するクラスに分類する
+kの数によって精度を変えることができる
+② kmeans
+＝教師なし学習のクラスタリング手法
+与えられたデータをk個のクラスタに分類
+各クラスタ中心の初期値を設定（ランダム）→各データ点に対して、各クラスタ中心との距離を計算し、最も近いクラスタを割り当て→各クラスタの平均ベクトルを計算→収束するまで繰り返す
 ・実装演習結果：
 ・演習問題：
 
-6. サポートベクターマシン
+6. サポートベクターマシン(SVM)
 ・要点：
+① SVM＝クラス分類アルゴリズム。決定関数のパラメータ推定方法
+② マージン最大化＝マージン（分類境界を挟んだクラスの距離）を最大化し、分類精度を高める
+③ 過学習を防ぐ方法＝ハードマージン（訓練データのマージンを最大化したもの）をソフトマージン（分類誤りのデータを消す）に変換する
 ・実装演習結果：
 ・演習問題：
