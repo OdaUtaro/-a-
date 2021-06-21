@@ -22,7 +22,8 @@ model.fit(x_train, y_train)
 print(model.predict(np.array([[0.3, 4]])))
 
 結果　[3.53965207]
-・演習問題：
+・その他：
+
 
 2. 非線形回帰モデル
 ・要点：
@@ -87,19 +88,48 @@ survived(30, 'male')
 ④ ラグランジュ関数＝目的変数-ラグランジュ乗数x制約条件
 ⑤ 寄与率＝全情報量の内、該当する主成分が占める情報量の割合
 ・実装演習結果：
-from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import train_test_split
-from sklearn.decomposition import PCA
 import pandas as pd
-import numpy as np
-cancer = load_breast_cancer()
-df = pd.DataFrame(cancer.data, columns=cancer.feature_names)
-dfs = df.iloc[:, 1:].apply(lambda x: (x-x.mean())/x.std(), axis=0)
-pca = PCA()
-pca.fit(dfs)
-feature = pca.transform(dfs)
-pd.DataFrame(feature, columns=["PC{}".format(x + 1) for x in range(len(dfs.columns))]).head()
-pd.DataFrame(pca.explained_variance_ratio_, index=["PC{}".format(x + 1) for x in range(len(dfs.columns))])
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+df = pd.read_csv('data.csv')
+df.drop('Unnamed: 32', axis=1, inplace=True)
+y = df.diagnosis.apply(lambda d: 1 if d == 'M' else 0)
+x = df.loc[:, 'radius_mean':]
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=0)
+scaler = StandardScaler()
+x_train_scaled = scaler.fit_transform(x_train)
+x_test_scaled = scaler.transform(x_test)
+logistic = LogisticRegression()
+logistic.fit(x_train_scaled, y_train)
+print(logistic.score(x_train_scaled, y_train))
+print(logistic.score(x_test_scaled, y_test))
+
+結果
+0.9906103286384976
+0.958041958041958
+
+pca = PCA(n_components=2)
+x_train_pca = pca.fit_transform(x_train_scaled)
+print(pca.explained_variance_ratio_)
+
+結果
+[0.43315126 0.19586506]
+
+pca_pipeline = Pipeline([
+    ('scale', StandardScaler()),
+    ('decomposition', PCA(n_components=2)),
+    ('model', LogisticRegression())
+])
+pca_pipeline.fit(X_train, y_train)
+print(pca_pipeline.score(X_train, y_train))
+print(pca_pipeline.score(X_test, y_test))
+
+結果
+0.9624413145539906
+0.9370629370629371
 ・演習問題：
 
 
@@ -113,7 +143,6 @@ kの数によって精度を変えることができる
 ＝教師なし学習のクラスタリング手法
 与えられたデータをk個のクラスタに分類
 各クラスタ中心の初期値を設定（ランダム）→各データ点に対して、各クラスタ中心との距離を計算し、最も近いクラスタを割り当て→各クラスタの平均ベクトルを計算→収束するまで繰り返す
-・実装演習結果：
 ・演習問題：
 
 6. サポートベクターマシン(SVM)
@@ -121,5 +150,4 @@ kの数によって精度を変えることができる
 ① SVM＝クラス分類アルゴリズム。決定関数のパラメータ推定方法
 ② マージン最大化＝マージン（分類境界を挟んだクラスの距離）を最大化し、分類精度を高める
 ③ 過学習を防ぐ方法＝ハードマージン（訓練データのマージンを最大化したもの）をソフトマージン（分類誤りのデータを消す）に変換する
-・実装演習結果：
 ・演習問題：
