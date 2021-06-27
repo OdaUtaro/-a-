@@ -3,7 +3,6 @@
 ① 入力層＝データ及びバイアスを入力する層。入力する数には特に大きな制約はなく、入力層以降の重み等で調整することができる
 ② 中間層＝入力層の数値に対して重みを設定し、計算した値を次の層を出力する。中間層を増やすことで複雑なモデルを生成することができる
 ③ 入力層として取るべきでないデータ＝欠損値が多い、誤差が大きい、出力そのもの、出力を加工した情報、連続性のないデータ、無意味な数が割り当てられているデータ
-実装演習結果：
 確認テスト：
 ① 総入出力のpythonでの数式？
 A. np.dot(x, w)+b1
@@ -11,21 +10,18 @@ A. np.dot(x, w)+b1
 A. 
 u2 = np.dot(z1, W2) +b2
 z2 = functions.relu(u2)
-その他：
 
 2.活性化関数
 要点：
 ① 活性化関数＝ニューラルネットワークで入力した値を適当な形に変換する関数
 ② 中間層用の活性化関数＝ステップ関数、シグモイド関数（勾配消失問題発生）、ReLU関数（勾配消失関数を回避し、スパース化に貢献）
 ③ 出力層用の活性化関数＝ソフトマックス関数、恒等写像、シグモイド関数
-実装演習結果：
 確認テスト：
 ① 線形と非線形の違い？
 A.線形＝一直線の関数。加法性、斉次性あり
 非線形＝一直線ではない関数。加法性、斉次性を満たさない
 ② 活性化関数が使われている場所？
 A. z1 = functions.relu(u1)
-その他：
 
 3.出力層
 要点：
@@ -33,7 +29,6 @@ A. z1 = functions.relu(u1)
 ② ニューラルネットワークの学習の仕方＝訓練データを使って、出力結果と実際の回答を照合する。照合した結果の正解率によってバイアスや重みを更新
 ③ 出力層で誤差を計算する方法＝平均二乗和誤差、クロスエントロピー誤差（分類問題）
 ④ 使う活性化関数の種類　回帰＝恒等写像　二値分類＝シグモイド関数　他クラス分類＝ソフトマックス関数
-実装演習結果：
 確認テスト：
 ① なぜ引き算ではなく二乗するのか？
 A. 引き算をしてしまうと＋ーの影響があるため、二乗することで＋ーの影響をなくす
@@ -46,7 +41,6 @@ A. 後に誤差関数を微分する際に、計算を簡単にするため
 ④ (1)~(2)の数式に該当するソースコードを抜き出せ（交差エントロピー）
 (1)def cross_entropyy_error(d, y)・・・dとyを引数とするcross_entropyy_errorという関数を生成
 (2)-np.sum(np.log(y[np.arrange(batch_size), d] + 1e-7))・・・引数yの内、指定した値の対数を合計した値
-その他：
 
 4.勾配降下法
 要点：
@@ -55,23 +49,258 @@ A. 後に誤差関数を微分する際に、計算を簡単にするため
 ③ 学習率が大きい＝最小値までいつまでたっても届かない
 ④ 学習率が小さい＝収束するまでの時間がかかってしまう＋極所的に低いところで学習が止まる可能性がある
 ⑤ ミニバッチ勾配降下法のメリット＝CPUを利用したスレッド並列化やGPUを利用したSIMD並列化
-実装演習結果：
 確認テスト：
 ① オンライン学習とは？
 自分の答え　更新されていくデータを反映しながら学習を進めていく学習方法
 講師の答え　学習データが入ってくるたびに都度パラメータを更新、学習を進めていく方法、一方、バッチ楽手では一度すべての学習データを使ってパラメ－タ更新を行う
-その他：
 
 5.誤差逆伝播法
 要点：
 ① 誤差逆伝播法＝出力結果と正解との誤差からモデル式のバイアスや重みを更新する
-② 計算方法・・・計算結果から微分を逆算して、不要な再帰的計算を避ける微分を算出可能
-③ 
-実装演習結果：
+② 計算方法＝計算結果から微分を逆算して、不要な再帰的計算を避ける微分を算出可能
+③ 特徴＝計算結果から微分を逆算をしているため、不要な再帰的計算を避けることができる
 確認テスト：
 ① 既に行った計算結果を保持しているソースコードとは？
 A. 
 Eの微分　delta2 = function.d_mean_squared_error(d, y)
 Eの微分*yの微分　delta1 = np.dot(delta2, W2.T) * fucntion.d_sigmoid(s1)
 Eの微分*yの微分*uの微分　grad['W1'] = np.dot(x.T, delta1)
-その他：
+② 2つの空欄に該当するソースコードを探せ？
+A.
+delta2 = fucntions.d_mean_squared_error(d,y)
+grad['W2'] = np.dot(z1.delta2)
+
+
+実装結果演習：
+『ゼロから作る　Deep Learning』を参考にMINSTデータでを使ったニューラルネットワーク（1.～5.で学んだこと）を実装
+import sys,os 
+sys.path.append(os.pardir)
+import numpy as np
+from dataset.mnist import load_mnist
+from collections import OrderedDict
+#誤差関数
+def cross_entropy_error(y,t):
+    if y.ndim == 1:
+        t = t.reshape(1, t.size)
+        y = y.reshape(1, y.size)
+        
+    batch_size = y.shape[0]
+    return -np.sum(t*np.log(y + 1e-7)) / batch_size
+
+#活性化関数
+def softmax(a):
+    c = np.max(a)
+    exp_a = np.exp(a - c) #オーバーフロー対策
+    sum_exp_a = np.sum(exp_a)
+    y = exp_a / sum_exp_a
+    
+    return y
+
+#Relu関数(逆伝播)
+class Relu:
+    def __init__(self):
+        self.mask = None
+        
+    def forward(self, x):
+        self.mask = (x <= 0)
+        out = x.copy()
+        out[self.mask] = 0
+        
+        return out
+    
+    def backward(self, dout):
+        dout[self.mask] = 0
+        dx = dout
+        
+        return dx
+
+#シグモイド関数(逆伝播)        
+class Sigmoid:
+    def __init__(self):
+        self.out = None
+        
+    def forward(self, x):
+        out = 1 / (1 + np.exp(-x))
+        self.out = out
+        
+        return out
+    
+    def backword(self, dout):
+        dx = dout * (1.0 - self.out) * self.out
+        
+        return dx
+
+#Affine関数(逆伝播)    
+class Affine:
+    def __init__(self, W, b):
+        self.W = W
+        self.b = b
+        self.x = None
+        self.dW = None
+        self.db = None
+        
+    def forward(self, x):
+        self.x = x
+        out = np.dot(x, self.W) + self.b
+        
+        return out
+    
+    def backward(self, dout):
+        dx = np.dot(dout, self.W.T)
+        self.dW = np.dot(self.x.T, dout)
+        self.db = np.sum(dout, axis = 0)
+        
+        return dx
+
+#ソフトマックス関数(逆伝播)
+class SoftmaxWithLoss:
+    def __init__(self):
+        self.loss = None
+        self.y = None
+        self.t = None
+    
+    def forward(self, x, t):
+        self.t = t
+        self.y = softmax(x)
+        self.loss = cross_entropy_error(self.y, self.t)
+        
+        return self.loss 
+
+    def backward(self, dout=1):
+        batch_size = self.t.shape[0]
+        dx = (self.y - self.t) / batch_size
+        
+        return dx
+    
+def numerical_gradient(self, x, t):
+        loss_W = lambda W: self.loss(x,t)
+        
+        grads = {}
+        grads['W1'] = numerical_gradient(loss_W, self.params['W1'])
+        grads['b1'] = numerical_gradient(loss_W, self.params['b1'])
+        grads['W2'] = numerical_gradient(loss_W, self.params['W2'])
+        grads['b2'] = numerical_gradient(loss_W, self.params['b2'])
+        
+        return grads
+class TwoLayerNet:
+    def __init__(self, input_size, hidden_size, output_size, weight_init_std=0.01):
+        self.params = {}
+        self.params['W1'] = weight_init_std * \
+            np.random.randn(input_size, hidden_size)
+        self.params['b1'] = np.zeros(hidden_size)
+        self.params['W2'] = weight_init_std * \
+            np.random.randn(hidden_size, output_size)
+        self.params['b2'] = np.zeros(output_size)
+        
+        self.layers = OrderedDict()
+        self.layers['Affine1'] = Affine(self.params['W1'], self.params['b1'])
+        self.layers['Relu1'] = Relu()
+        self.layers['Affine2'] = Affine(self.params['W2'], self.params['b2'])
+        
+        self.lastLayer = SoftmaxWithLoss()
+        
+    def predict(self, x):
+        for layer in self.layers.values():
+            x = layer.forward(x)
+            
+        return x
+    
+    def loss(self, x, t):
+        y = self.predict(x)
+        
+        return self.lastLayer.forward(y,t)
+    
+    def accuracy(self, x, t):
+        y = self.predict(x)
+        y = np.argmax(y, axis = 1)
+        if t.ndim != 1 : t = np.argmax(t, axis = 1)
+
+        accuracy = np.sum(y == t) / float(x.shape[0])
+        return accuracy
+    
+    def numerical_gradient(self, x, t):
+        loss_W = lambda W: self.loss(x,t)
+        
+        grads = {}
+        grads['W1'] = numerical_gradient(loss_W, self.params['W1'])
+        grads['b1'] = numerical_gradient(loss_W, self.params['b1'])
+        grads['W2'] = numerical_gradient(loss_W, self.params['W2'])
+        grads['b2'] = numerical_gradient(loss_W, self.params['b2'])
+        
+        return grads
+    
+    def gradient(self, x, t):
+        self.loss(x, t)
+        
+        dout = 1
+        dout = self.lastLayer.backward(dout)
+        
+        layers = list(self.layers.values())
+        layers.reverse()
+        for layer in layers:
+            dout = layer.backward(dout)
+            
+        grads = {}
+        grads['W1'] = self.layers['Affine1'].dW        
+        grads['b1'] = self.layers['Affine1'].db
+        grads['W2'] = self.layers['Affine2'].dW
+        grads['b2'] = self.layers['Affine2'].db
+
+        return grads
+
+(x_train, t_train), (x_test, t_test) = \
+       load_mnist(normalize = True, one_hot_label = True)
+    
+iters_num = 10000
+train_size = x_train.shape[0]
+batch_size = 100
+learning_rate = 0.1
+
+#入力層、中間層、出力層の決定
+network = TwoLayerNet(input_size = 784, hidden_size = 50, output_size = 10)
+train_loss_list = []
+train_acc_list = []
+test_acc_list = []
+
+iter_per_epoch = max(train_size / batch_size, 1)
+
+
+for i in range(iters_num):
+    batch_mask = np.random.choice(train_size, batch_size)
+    x_batch = x_train[batch_mask]
+    t_batch = t_train[batch_mask]
+    
+    #勾配計算
+    grad = network.gradient(x_batch, t_batch)
+    
+    for key in ('W1', 'b1', 'W2', 'b1'):
+        network.params[key] -= learning_rate * grad[key]
+        
+    loss = network.loss(x_batch, t_batch)
+    train_loss_list.append(loss)
+    
+    if i % iter_per_epoch == 0:
+        train_acc = network.accuracy(x_train, t_train)
+        test_acc= network.accuracy(x_test, t_test)
+        train_acc_list.append(train_acc)
+        test_acc_list.append(test_acc)
+        print(train_acc, test_acc)
+
+結果
+0.09518333333333333 0.1036
+0.10218333333333333 0.101
+0.09871666666666666 0.098
+0.09751666666666667 0.0974
+0.0993 0.1032
+0.09871666666666666 0.098
+0.09751666666666667 0.0974
+0.09871666666666666 0.098
+0.09871666666666666 0.098
+0.09871666666666666 0.098
+0.09751666666666667 0.0974
+0.09751666666666667 0.0974
+0.09871666666666666 0.098
+0.09751666666666667 0.0974
+0.09751666666666667 0.0974
+0.09871666666666666 0.098
+0.09871666666666666 0.098
