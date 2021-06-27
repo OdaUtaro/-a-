@@ -56,12 +56,28 @@
 
 5.Transformer
 要点：
+① Transformer＝RNNを使わず、Attentionだけを使うことで計算量を抑える
+② Attention＝Keyの中から近いqueryを探し、Valueを出力する
 実装演習結果：
 確認テスト：
 その他：
 
 6.物体検知・セグメンテーション
 要点：
+① 物体認識タスク＝分類/物体検知/意味領域分割/個体領域分類
+② 代表的データセット＝VOC12/ILSVRC17/MSCOCO18/OICOD18
+③ クラスが多い＝細かく分類されている
+④ BOXが多い＝日常に近い
+⑤ IoU＝真のBouding box と評価したいBouding boxの物体位置精度の評価指標
+⑥ FPS＝検出速度の指標（１秒当たりの処理できるフレーム数）
+⑦ 物体検知のフレームワークの分類＝２段階検出器（候補領域の検出とクラス推定を別々に行う）/1段階検出器
+⑧ SSD＝Default Boxを用意→Default Boxを変形し目的の物体を検出する方法
+⑨ Semantic Segmentation＝入力時のデータと同一の形の物体検知を行う
+⑩ アップサンブリング＝畳み込んだデータから元の大きさのデータを出力する方法
+⑪ FCN＝
+⑫ U-Net＝エンコーダ、デコーダマップ。プーリング前の。チャネル方向で結合
+⑬ Unpooling＝
+⑭ Dilated Convolution＝Convolutionの段階で受容野を広げる工夫
 実装演習結果：
 確認テスト：
 その他：
