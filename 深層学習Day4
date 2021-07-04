@@ -7,9 +7,6 @@
 ⑤ 価値関数＝状態価値関数と行動価値関数の２種類ある。それぞれの関数の違いは価値の決め方が違う
 ⑥ 方策関数＝ある状態でどのような行動を採るのかの確率を与える関数
 ⑦ 方策勾配法＝適切な方策を求める方法（誤差関数は目標とする報酬）
-実装演習結果：
-確認テスト：
-その他：
 
 2.AlphaGO
 要点：
@@ -21,9 +18,10 @@
 ⑥ Alpha Go Lee＝先に教師あり学習で学習してから強化学習を行う
 ⑦ Alpha Go Zero＝強化学習のみで学習を行う
 ⑧ Residiual Block＝ネットワークのショートカットを作成
-実装演習結果：
-確認テスト：
-その他：
+関連文献：
+https://www.quantamagazine.org/why-alphazeros-artificial-intelligence-has-trouble-with-the-real-world-20180221/
+記事名＝「Why Artificial Intelligence Like AlphaZero Has Trouble With the Real World」
+自己学習の現実世界での問題点＝学習したことのない緊急事態への対応が難しい＝医療など１つのミスの影響の大きい分野では緊急事態への対応が難しいから学習が進まない
 
 3.軽量化・高速化技術
 要点：
@@ -37,9 +35,7 @@
 ⑧ 半精度＝16bit/単精度＝32bit/倍精度＝64bit(現状半精度で問題ない）
 ⑨ 蒸留＝精度の高いモデルので知識を軽量なモデルへ継承させる。重みを固定する教師モデルと重みを更新できる生徒モデルを使う
 ⑨ プルーニング＝必要なパラメータだけを残し、不必要なパラメータをなくし計算を高速化する。重みが閾値より低いものを削減 
-実装演習結果：
-確認テスト：
-その他：
+
 
 4.応用モデル
 要点：
@@ -50,17 +46,13 @@
 ⑤ Layer Norm＝それぞれのsampleのすべてのpixelsが同一分布に従うよう正規化
 ⑥ Instance Norm＝channelも同一分布に従うように正規化
 ⑦ Wavenet＝音声生成モデル。時系列データに対して畳み込みを適用する
-実装演習結果：
-確認テスト：
-その他：
 
 5.Transformer
 要点：
-① Transformer＝RNNを使わず、Attentionだけを使うことで計算量を抑える
-② Attention＝Keyの中から近いqueryを探し、Valueを出力する
-実装演習結果：
-確認テスト：
-その他：
+① Transformer＝RNNを使わず、Attentionだけを使うことで計算量を抑える(Encoder-Decoder * Attention)
+② Attention＝Keyの中から近いqueryを探し、Valueを出力する。翻訳元の文中の各単語の隠れ状態を利用
+③ 特徴＝文長が長くなっても翻訳精度が落ちない
+④ Attentionの種類＝Source Target Attention/Self-Attention
 
 6.物体検知・セグメンテーション
 要点：
@@ -74,10 +66,6 @@
 ⑧ SSD＝Default Boxを用意→Default Boxを変形し目的の物体を検出する方法
 ⑨ Semantic Segmentation＝入力時のデータと同一の形の物体検知を行う
 ⑩ アップサンブリング＝畳み込んだデータから元の大きさのデータを出力する方法
-⑪ FCN＝
-⑫ U-Net＝エンコーダ、デコーダマップ。プーリング前の。チャネル方向で結合
-⑬ Unpooling＝
-⑭ Dilated Convolution＝Convolutionの段階で受容野を広げる工夫
-実装演習結果：
-確認テスト：
-その他：
+⑪ U-Net＝エンコーダ、デコーダマップ。プーリング前の。チャネル方向で結合
+⑫ Dilated Convolution＝Convolutionの段階で受容野を広げる工夫
+
