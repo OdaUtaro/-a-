@@ -36,7 +36,6 @@ https://www.quantamagazine.org/why-alphazeros-artificial-intelligence-has-troubl
 ⑨ 蒸留＝精度の高いモデルので知識を軽量なモデルへ継承させる。重みを固定する教師モデルと重みを更新できる生徒モデルを使う
 ⑨ プルーニング＝必要なパラメータだけを残し、不必要なパラメータをなくし計算を高速化する。重みが閾値より低いものを削減 
 
-
 4.応用モデル
 要点：
 ① Mobile Net＝畳み込み演算を工夫。Depthwise Convolution（フィルタ数を１で固定し、１チャンネルごとに畳み込む）とPointwise Convolution（1*1のカーネルで畳み込む）
@@ -68,4 +67,7 @@ https://www.quantamagazine.org/why-alphazeros-artificial-intelligence-has-troubl
 ⑩ アップサンブリング＝畳み込んだデータから元の大きさのデータを出力する方法
 ⑪ U-Net＝エンコーダ、デコーダマップ。プーリング前の。チャネル方向で結合
 ⑫ Dilated Convolution＝Convolutionの段階で受容野を広げる工夫
-
+関連記事：
+https://ledge.ai/jr-west-ai-edge-contest-champion/
+記事名＝「社内でAI人材を発掘するJR西日本、物体認識コンペ優勝の裏側」
+要約＝「車両前方カメラ画像を活用した物体追跡」を行うコンペでJR西日本の社員が優勝。「Tracking-by-detection」と「Joint detection and tracking」を使って解決
