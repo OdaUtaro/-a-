@@ -6,7 +6,6 @@
 ④ 勾配消失問題が起こりにくい活性化関数＝ReLU関数(勾配消失問題を回避し、スパース化に貢献）
 ⑤ 重みの初期値を設定＝重みの要素を前の層のノード数の平方根で除算した値。S字関  数はXavier、Relu関数はHeを使う
 ⑥ バッチ正規化＝ミニバッチ単位で入力値のデータの偏りを抑制する手法。過学習を防ぐ、中間層の重みの更新が安定しスピードアップする
-実装演習結果：
 確認テスト：
 Q.連鎖率の原理を使い、dz/dxを求めよ？
 A.dz/dx = dz/dt * dt/dx
@@ -62,6 +61,10 @@ Relu関数結果
 0.09871666666666666 0.098
 0.09871666666666666 0.098
 0.09871666666666666 0.098
+関連文献：
+https://arxiv.org/pdf/2009.04759.pdf
+近年論文で発表された新しい活性化関数　ACON関数
+特徴＝smooth maximumというテクニックを使う
 
 2.学習率最適化手法
 要点：
@@ -71,8 +74,117 @@ Relu関数結果
 ④ RMSProp＝昔の勾配情報をどの程度参照するのかを調整できる。大域最適解となる。Adagradの進化版
 ⑤ Adam＝モメンタムおよびRMSPropのメリットを孕んだアルゴリズム
 実装演習結果：
+MINST DATAでSGD、Momentum、AdaGrad、Adamの結果を比較
+===========iteration:0===========
+SGD:2.3908788890493966
+Momentum:2.346215465425103
+AdaGrad:2.1625710934647158
+Adam:2.1401816481596607
+===========iteration:100===========
+SGD:1.6441678681480918
+Momentum:0.30156184189152657
+AdaGrad:0.15439397809975486
+Adam:0.23482318391410098
+===========iteration:200===========
+SGD:0.8217053289772877
+Momentum:0.21602706395330745
+AdaGrad:0.10532681693092669
+Adam:0.1558174093840552
+===========iteration:300===========
+SGD:0.552534302502362
+Momentum:0.2268812792784042
+AdaGrad:0.09321631946052303
+Adam:0.13093994647876678
+===========iteration:400===========
+SGD:0.5453986472482589
+Momentum:0.25513904439155455
+AdaGrad:0.09461167594457043
+Adam:0.1906849639541645
+===========iteration:500===========
+SGD:0.37895496994308475
+Momentum:0.1288525181457174
+AdaGrad:0.053336103346758826
+Adam:0.07897983003325562
+===========iteration:600===========
+SGD:0.2612741454744909
+Momentum:0.09687258794571939
+AdaGrad:0.043914950679891436
+Adam:0.08118960593473482
+===========iteration:700===========
+SGD:0.39976446910589114
+Momentum:0.1190603368338905
+AdaGrad:0.055420279886911075
+Adam:0.04459574710950438
+===========iteration:800===========
+SGD:0.34625313808042696
+Momentum:0.15057447657530046
+AdaGrad:0.05159111243900987
+Adam:0.10499581562311977
+===========iteration:900===========
+SGD:0.3047299542319063
+Momentum:0.07978699549449998
+AdaGrad:0.03763363492757573
+Adam:0.05783696665262985
+===========iteration:1000===========
+SGD:0.20033224288217655
+Momentum:0.0623194735450288
+AdaGrad:0.02780473183355267
+Adam:0.048887747814348445
+===========iteration:1100===========
+SGD:0.2660406691381614
+Momentum:0.15302980849746278
+AdaGrad:0.07665148375924732
+Adam:0.0933460527900446
+===========iteration:1200===========
+SGD:0.44430952282684005
+Momentum:0.22177833136243957
+AdaGrad:0.07968642611921013
+Adam:0.12273432002256365
+===========iteration:1300===========
+SGD:0.3519475999292094
+Momentum:0.18292590464423553
+AdaGrad:0.1388696661756325
+Adam:0.1620548212448823
+===========iteration:1400===========
+SGD:0.2331728998069832
+Momentum:0.04426701285671733
+AdaGrad:0.030817784090630945
+Adam:0.019451647567129627
+===========iteration:1500===========
+SGD:0.14284549141276687
+Momentum:0.02575967777773587
+AdaGrad:0.011873849345006588
+Adam:0.014662476299304696
+===========iteration:1600===========
+SGD:0.2128763615033241
+Momentum:0.025228995468892568
+AdaGrad:0.025768518367679048
+Adam:0.01518361632304049
+===========iteration:1700===========
+SGD:0.20350436475346648
+Momentum:0.0642042748716447
+AdaGrad:0.02367137769722996
+Adam:0.049489644083318005
+===========iteration:1800===========
+SGD:0.3455645288619819
+Momentum:0.15607684483454576
+AdaGrad:0.06488284130431408
+Adam:0.0751583173624639
+===========iteration:1900===========
+SGD:0.18464731329158404
+Momentum:0.039984909588208634
+AdaGrad:0.04010729551390545
+Adam:0.024940496246205618
 確認テスト：
-その他：
+Q. モメンタム・AdaGrad・RMSPropの特徴？
+A. モメンタム・・・最初は更新量が少ないが途中から急激に更新量が増えていく
+　 AdaGrad・・・勾配の緩やかな斜面に対しては最適解を見つけるのが得意だが、急な斜面だと安全問題を発生する
+  RMSProp・・・局所最適解とならず、大域最適解となる。パラメータの調整をする必要が少ない
+関連文献：
+https://openreview.net/pdf?id=Bkg3g2R9FX
+新しい最適化手法　AdaBound/AMSBound
+AdaBound＝Adamの学習率に上限と下限を追加
+AMSBound＝AMSGradの学習率に上限と下限を追加
 
 3.過学習
 要点：
@@ -82,10 +194,211 @@ Relu関数結果
 ④ L2正則化＝p2ノルム（ユーグリット距離）を使う
 ⑤ ドロップアウト＝部分的にニューラルネットワークを切断して学習を行う
 実装演習結果：
+MNIST　DATAに対して正則化を実施結果
+epoch:0, train acc:0.08666666666666667, test acc:0.094
+epoch:1, train acc:0.09666666666666666, test acc:0.1071
+epoch:2, train acc:0.12666666666666668, test acc:0.1239
+epoch:3, train acc:0.16, test acc:0.1411
+epoch:4, train acc:0.19666666666666666, test acc:0.1576
+epoch:5, train acc:0.24, test acc:0.1773
+epoch:6, train acc:0.27666666666666667, test acc:0.1974
+epoch:7, train acc:0.31333333333333335, test acc:0.2208
+epoch:8, train acc:0.3466666666666667, test acc:0.2328
+epoch:9, train acc:0.37333333333333335, test acc:0.2484
+epoch:10, train acc:0.38, test acc:0.2552
+epoch:11, train acc:0.4266666666666667, test acc:0.2839
+epoch:12, train acc:0.44, test acc:0.303
+epoch:13, train acc:0.47, test acc:0.3225
+epoch:14, train acc:0.5033333333333333, test acc:0.3414
+epoch:15, train acc:0.51, test acc:0.3502
+epoch:16, train acc:0.5266666666666666, test acc:0.3741
+epoch:17, train acc:0.5333333333333333, test acc:0.3798
+epoch:18, train acc:0.5466666666666666, test acc:0.3858
+epoch:19, train acc:0.5466666666666666, test acc:0.3865
+epoch:20, train acc:0.5233333333333333, test acc:0.3796
+epoch:21, train acc:0.52, test acc:0.3844
+epoch:22, train acc:0.5533333333333333, test acc:0.3953
+epoch:23, train acc:0.5466666666666666, test acc:0.3961
+epoch:24, train acc:0.54, test acc:0.3908
+epoch:25, train acc:0.5266666666666666, test acc:0.3848
+epoch:26, train acc:0.52, test acc:0.3883
+epoch:27, train acc:0.52, test acc:0.3851
+epoch:28, train acc:0.4866666666666667, test acc:0.3839
+epoch:29, train acc:0.49666666666666665, test acc:0.3831
+epoch:30, train acc:0.5, test acc:0.3858
+epoch:31, train acc:0.5066666666666667, test acc:0.3877
+epoch:32, train acc:0.4866666666666667, test acc:0.3836
+epoch:33, train acc:0.48333333333333334, test acc:0.3808
+epoch:34, train acc:0.49666666666666665, test acc:0.3916
+epoch:35, train acc:0.52, test acc:0.3984
+epoch:36, train acc:0.5066666666666667, test acc:0.4029
+epoch:37, train acc:0.51, test acc:0.4011
+epoch:38, train acc:0.52, test acc:0.409
+epoch:39, train acc:0.51, test acc:0.4146
+epoch:40, train acc:0.5266666666666666, test acc:0.4213
+epoch:41, train acc:0.54, test acc:0.4328
+epoch:42, train acc:0.58, test acc:0.4481
+epoch:43, train acc:0.6233333333333333, test acc:0.4646
+epoch:44, train acc:0.59, test acc:0.4485
+epoch:45, train acc:0.6133333333333333, test acc:0.4696
+epoch:46, train acc:0.6233333333333333, test acc:0.4737
+epoch:47, train acc:0.6166666666666667, test acc:0.4748
+epoch:48, train acc:0.6433333333333333, test acc:0.4884
+epoch:49, train acc:0.66, test acc:0.4978
+epoch:50, train acc:0.68, test acc:0.5048
+epoch:51, train acc:0.6733333333333333, test acc:0.5082
+epoch:52, train acc:0.6733333333333333, test acc:0.5047
+epoch:53, train acc:0.68, test acc:0.516
+epoch:54, train acc:0.69, test acc:0.5205
+epoch:55, train acc:0.6766666666666666, test acc:0.5122
+epoch:56, train acc:0.67, test acc:0.5257
+epoch:57, train acc:0.6666666666666666, test acc:0.5274
+epoch:58, train acc:0.7, test acc:0.5341
+epoch:59, train acc:0.6833333333333333, test acc:0.53
+epoch:60, train acc:0.7066666666666667, test acc:0.546
+epoch:61, train acc:0.6933333333333334, test acc:0.5325
+epoch:62, train acc:0.7033333333333334, test acc:0.5313
+epoch:63, train acc:0.7233333333333334, test acc:0.5466
+epoch:64, train acc:0.7166666666666667, test acc:0.5506
+epoch:65, train acc:0.7333333333333333, test acc:0.5594
+epoch:66, train acc:0.74, test acc:0.5665
+epoch:67, train acc:0.74, test acc:0.5701
+epoch:68, train acc:0.75, test acc:0.5755
+epoch:69, train acc:0.76, test acc:0.5783
+epoch:70, train acc:0.7633333333333333, test acc:0.5814
+epoch:71, train acc:0.7533333333333333, test acc:0.5785
+epoch:72, train acc:0.7733333333333333, test acc:0.5803
+epoch:73, train acc:0.7833333333333333, test acc:0.5883
+epoch:74, train acc:0.7766666666666666, test acc:0.5854
+epoch:75, train acc:0.79, test acc:0.5996
+epoch:76, train acc:0.7733333333333333, test acc:0.5917
+epoch:77, train acc:0.7833333333333333, test acc:0.588
+epoch:78, train acc:0.7633333333333333, test acc:0.5809
+epoch:79, train acc:0.7866666666666666, test acc:0.5933
+epoch:80, train acc:0.7866666666666666, test acc:0.5929
+epoch:81, train acc:0.8066666666666666, test acc:0.5998
+epoch:82, train acc:0.8066666666666666, test acc:0.6085
+epoch:83, train acc:0.8133333333333334, test acc:0.6152
+epoch:84, train acc:0.8266666666666667, test acc:0.6254
+epoch:85, train acc:0.82, test acc:0.6272
+epoch:86, train acc:0.8233333333333334, test acc:0.6286
+epoch:87, train acc:0.82, test acc:0.6202
+epoch:88, train acc:0.81, test acc:0.6244
+epoch:89, train acc:0.82, test acc:0.6265
+epoch:90, train acc:0.8166666666666667, test acc:0.6271
+epoch:91, train acc:0.82, test acc:0.6302
+epoch:92, train acc:0.8233333333333334, test acc:0.6327
+epoch:93, train acc:0.8266666666666667, test acc:0.6354
+epoch:94, train acc:0.8333333333333334, test acc:0.6432
+epoch:95, train acc:0.83, test acc:0.644
+epoch:96, train acc:0.8166666666666667, test acc:0.6435
+epoch:97, train acc:0.8366666666666667, test acc:0.6447
+epoch:98, train acc:0.8366666666666667, test acc:0.6388
+epoch:99, train acc:0.84, test acc:0.6371
+epoch:100, train acc:0.8333333333333334, test acc:0.6343
+epoch:101, train acc:0.8366666666666667, test acc:0.6366
+epoch:102, train acc:0.8366666666666667, test acc:0.6408
+epoch:103, train acc:0.8366666666666667, test acc:0.6457
+epoch:104, train acc:0.84, test acc:0.6488
+epoch:105, train acc:0.84, test acc:0.6413
+epoch:106, train acc:0.84, test acc:0.6486
+epoch:107, train acc:0.8433333333333334, test acc:0.6496
+epoch:108, train acc:0.85, test acc:0.6481
+epoch:109, train acc:0.8366666666666667, test acc:0.6537
+epoch:110, train acc:0.8366666666666667, test acc:0.6596
+epoch:111, train acc:0.8433333333333334, test acc:0.6512
+epoch:112, train acc:0.8466666666666667, test acc:0.6548
+epoch:113, train acc:0.8433333333333334, test acc:0.6507
+epoch:114, train acc:0.84, test acc:0.6553
+epoch:115, train acc:0.8266666666666667, test acc:0.647
+epoch:116, train acc:0.8433333333333334, test acc:0.6615
+epoch:117, train acc:0.8433333333333334, test acc:0.6605
+epoch:118, train acc:0.8466666666666667, test acc:0.6624
+epoch:119, train acc:0.8433333333333334, test acc:0.6607
+epoch:120, train acc:0.8433333333333334, test acc:0.6653
+epoch:121, train acc:0.8366666666666667, test acc:0.6613
+epoch:122, train acc:0.8533333333333334, test acc:0.6676
+epoch:123, train acc:0.85, test acc:0.6672
+epoch:124, train acc:0.8533333333333334, test acc:0.6656
+epoch:125, train acc:0.8533333333333334, test acc:0.666
+epoch:126, train acc:0.8466666666666667, test acc:0.6713
+epoch:127, train acc:0.86, test acc:0.6748
+epoch:128, train acc:0.85, test acc:0.6708
+epoch:129, train acc:0.8533333333333334, test acc:0.6711
+epoch:130, train acc:0.85, test acc:0.6716
+epoch:131, train acc:0.86, test acc:0.6773
+epoch:132, train acc:0.8566666666666667, test acc:0.6755
+epoch:133, train acc:0.8566666666666667, test acc:0.6759
+epoch:134, train acc:0.8533333333333334, test acc:0.6713
+epoch:135, train acc:0.8466666666666667, test acc:0.6676
+epoch:136, train acc:0.8566666666666667, test acc:0.6703
+epoch:137, train acc:0.8466666666666667, test acc:0.6718
+epoch:138, train acc:0.8466666666666667, test acc:0.6637
+epoch:139, train acc:0.85, test acc:0.6749
+epoch:140, train acc:0.85, test acc:0.6728
+epoch:141, train acc:0.8433333333333334, test acc:0.6729
+epoch:142, train acc:0.86, test acc:0.6728
+epoch:143, train acc:0.8566666666666667, test acc:0.666
+epoch:144, train acc:0.87, test acc:0.6796
+epoch:145, train acc:0.8666666666666667, test acc:0.6804
+epoch:146, train acc:0.8733333333333333, test acc:0.6806
+epoch:147, train acc:0.8633333333333333, test acc:0.6875
+epoch:148, train acc:0.8766666666666667, test acc:0.6865
+epoch:149, train acc:0.8633333333333333, test acc:0.6825
+epoch:150, train acc:0.88, test acc:0.6899
+epoch:151, train acc:0.8733333333333333, test acc:0.6831
+epoch:152, train acc:0.87, test acc:0.6904
+epoch:153, train acc:0.86, test acc:0.6889
+epoch:154, train acc:0.8666666666666667, test acc:0.6825
+epoch:155, train acc:0.87, test acc:0.6859
+epoch:156, train acc:0.8733333333333333, test acc:0.6859
+epoch:157, train acc:0.86, test acc:0.6868
+epoch:158, train acc:0.8633333333333333, test acc:0.6824
+epoch:159, train acc:0.86, test acc:0.6783
+epoch:160, train acc:0.8766666666666667, test acc:0.6916
+epoch:161, train acc:0.8766666666666667, test acc:0.6938
+epoch:162, train acc:0.87, test acc:0.694
+epoch:163, train acc:0.87, test acc:0.6925
+epoch:164, train acc:0.8533333333333334, test acc:0.679
+epoch:165, train acc:0.8566666666666667, test acc:0.68
+epoch:166, train acc:0.8633333333333333, test acc:0.6803
+epoch:167, train acc:0.8666666666666667, test acc:0.6813
+epoch:168, train acc:0.8766666666666667, test acc:0.6817
+epoch:169, train acc:0.8733333333333333, test acc:0.6852
+epoch:170, train acc:0.8666666666666667, test acc:0.6827
+epoch:171, train acc:0.8733333333333333, test acc:0.6852
+epoch:172, train acc:0.8766666666666667, test acc:0.683
+epoch:173, train acc:0.8833333333333333, test acc:0.6872
+epoch:174, train acc:0.88, test acc:0.6909
+epoch:175, train acc:0.8633333333333333, test acc:0.6878
+epoch:176, train acc:0.87, test acc:0.6751
+epoch:177, train acc:0.86, test acc:0.6868
+epoch:178, train acc:0.87, test acc:0.6897
+epoch:179, train acc:0.87, test acc:0.6822
+epoch:180, train acc:0.8666666666666667, test acc:0.6893
+epoch:181, train acc:0.88, test acc:0.6916
+epoch:182, train acc:0.8633333333333333, test acc:0.687
+epoch:183, train acc:0.86, test acc:0.6825
+epoch:184, train acc:0.8533333333333334, test acc:0.6916
+epoch:185, train acc:0.87, test acc:0.6933
+epoch:186, train acc:0.8666666666666667, test acc:0.6872
+epoch:187, train acc:0.8633333333333333, test acc:0.6891
+epoch:188, train acc:0.8733333333333333, test acc:0.6871
+epoch:189, train acc:0.87, test acc:0.6855
+epoch:190, train acc:0.8666666666666667, test acc:0.6849
+epoch:191, train acc:0.8633333333333333, test acc:0.6921
+epoch:192, train acc:0.8766666666666667, test acc:0.6901
+epoch:193, train acc:0.87, test acc:0.684
+epoch:194, train acc:0.8633333333333333, test acc:0.689
+epoch:195, train acc:0.8733333333333333, test acc:0.691
+epoch:196, train acc:0.8766666666666667, test acc:0.6918
+epoch:197, train acc:0.8833333333333333, test acc:0.6941
+epoch:198, train acc:0.8766666666666667, test acc:0.698
+epoch:199, train acc:0.8866666666666667, test acc:0.6966
+epoch:200, train acc:0.8666666666666667, test acc:0.6906
 確認テスト：
 Q. L1正則化を表しているグラフはどちらか？
 A. 右の正則化項の等高線がダイヤ型の方
-その他：
 
 4.畳み込みニューラルネットワーク
 要点：
@@ -96,13 +409,11 @@ A. 右の正則化項の等高線がダイヤ型の方
 ⑤ 全結合層＝人間が欲しい結果を求める層
 ⑥ 畳み込み演算を利用する理由＝縦、横などの情報を考慮した上での出力を行うため
 ⑦ プーリング層＝対象領域の最大値または平均を取得し、出力する
-実装演習結果：
 確認テスト：
 Q. サイズ6*6の入力画像をサイズ2*2のフィルタで畳み込んだ時の出力画像のサイズを答えよ(パディング、ストライドは1)？
 A. 6*6
 公式　高さ＝画像の高さ＋2*パディング高さ-フィルタの高さ/ストライド+1
 幅＝画像の幅＋2*パディング幅-フィルタの幅/ストライド+1
-その他：
 
 5.最新のCNN  
 要点：
@@ -111,6 +422,7 @@ A. 6*6
 ③ 入力層＝224*224の画像
 ④ 出力層＝1000
 ⑤ １次元の行列にする方法＝グローバルマックスプーリング or グローバルアベレージプーリング
-実装演習結果：
-確認テスト：
-その他：
+関連文献：
+https://arxiv.org/pdf/1912.11370.pdf
+新たな画像認識モデル
+パラメータ数が数億に及ぶ巨大なモデル
